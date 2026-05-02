@@ -2,14 +2,20 @@ import 'dotenv/config';
 import { Octokit } from '@octokit/rest';
 import type { RepoSummary, IssueSummary } from './dto.js';
 import { handleError } from './errors.js';
+import { executeWithRetry, extractRateLimit } from './rate-limit.js'
 
 export class GitHubClient {
     private octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
 
     async listRepos(perPage = 10): Promise<RepoSummary[]> {
         try {
-            const { data } = await this.octokit.rest.repos.listForAuthenticatedUser({ per_page: perPage });
-            return data.map(r => ({
+            const response = await this.octokit.rest.repos.listForAuthenticatedUser({ per_page: perPage });
+
+            const rateLimit = extractRateLimit(response.headers as Record<string, string>);
+            console.log(`Rate limit - restantes: ${rateLimit.remaining} / ${rateLimit.limit} | reset: ${rateLimit.resetAt.toLocaleTimeString()}`);
+
+
+            return response.data.map(r => ({
                 name: r.name,
                 visibility: r.visibility ?? 'unknown',
                 url: r.url,
