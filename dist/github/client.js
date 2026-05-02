@@ -12,7 +12,7 @@ export class GitHubClient {
             return response.data.map(r => ({
                 name: r.name,
                 visibility: r.visibility ?? 'unknown',
-                url: r.url,
+                url: r.html_url,
                 stars: r.stargazers_count ?? 0
             }));
         }
@@ -43,6 +43,19 @@ export class GitHubClient {
                 state: i.state,
                 url: i.html_url
             }));
+        }
+        catch (error) {
+            handleError(error);
+        }
+    }
+    async createRepo(name, options) {
+        try {
+            const { data } = await this.octokit.rest.repos.createForAuthenticatedUser({
+                name,
+                ...(options?.description ? { description: options.description } : {}),
+                private: options?.private ?? false
+            });
+            return data;
         }
         catch (error) {
             handleError(error);

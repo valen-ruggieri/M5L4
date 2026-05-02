@@ -3,6 +3,7 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { ListToolsRequestSchema, CallToolRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 import { CreateRepositorySchema, createRepositoryTool } from '../tools/repos.js';
+import { createRepositoryHandler } from '../handlers/create-repository.js';
 class MCPServerWrapper {
     tools = [];
     handlers = {};
@@ -35,7 +36,6 @@ class MCPServerWrapper {
     }
 }
 const server = new MCPServerWrapper();
-const createRepositoryHandler = async () => ({ content: [{ type: "text", text: "OK" }] });
 server.registerTool(createRepositoryTool.name, {
     description: createRepositoryTool.description,
     inputSchema: createRepositoryTool.schema

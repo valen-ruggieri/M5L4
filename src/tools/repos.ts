@@ -1,5 +1,14 @@
 import { z } from 'zod';
 
+export interface RepoDTO {
+  owner: string;
+  name: string;
+  full_name: string;
+  private: boolean;
+  html_url: string;
+  default_branch: string;
+}
+
 export const badCreateRepository = {
   name: "create_repository",
   description: "Crea un repositorio.",
