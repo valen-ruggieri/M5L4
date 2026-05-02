@@ -1,15 +1,5 @@
 import { z } from 'zod';
 
-export interface RepoDTO {
-  owner: string;
-  name: string;
-  full_name: string;
-  private: boolean;
-  html_url: string;
-  default_branch: string;
-}
-
-
 export const CreateRepositorySchema = z.object({
   name: z.string()
     .min(1, 'El nombre no puede estar vacio')
