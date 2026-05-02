@@ -2,6 +2,7 @@ import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { ListToolsRequestSchema, CallToolRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 import { zodToJsonSchema } from 'zod-to-json-schema';
+import { CreateRepositorySchema, createRepositoryTool } from '../tools/repos.js'
 
 class MCPServerWrapper {
   private tools: any[] = [];
@@ -18,10 +19,16 @@ class MCPServerWrapper {
   }
 
   registerTool(name: string, options: { description: string, inputSchema: any }, handler: any) {
+    const jsonSchema = zodToJsonSchema(options.inputSchema);
+    const { $schema, ...cleanSchema } = jsonSchema as any;
+
     this.tools.push({
       name,
       description: options.description,
-      inputSchema: zodToJsonSchema(options.inputSchema)
+      inputSchema: {
+        type: "object",
+        ...cleanSchema
+      }
     });
     this.handlers[name] = handler;
   }
@@ -35,5 +42,13 @@ class MCPServerWrapper {
 const server = new MCPServerWrapper();
 const createRepositoryHandler = async () => ({ content: [{ type: "text", text: "OK" }] });
 
+server.registerTool(
+  createRepositoryTool.name,
+  {
+    description: createRepositoryTool.description,
+    inputSchema: createRepositoryTool.schema
+  },
+  createRepositoryHandler
+)
 
 server.start().catch(console.error);

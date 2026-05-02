@@ -5,18 +5,21 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "tsx src/server/index.ts"
+    "dev": "tsx src/server/index.ts",
+    "build": "tsc",
+    "inspector": "npx @modelcontextprotocol/inspector npx tsx src/server/index.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "@modelcontextprotocol/inspector": "^0.21.2",
     "@modelcontextprotocol/sdk": "^1.29.0",
     "@octokit/rest": "^22.0.1",
     "dotenv": "^17.4.2",
-    "zod": "^4.4.2",
-    "zod-to-json-schema": "^3.25.2"
+    "zod": "^3.23.8",
+    "zod-to-json-schema": "^3.23.1"
   },
   "devDependencies": {
     "@types/node": "^25.6.0",
