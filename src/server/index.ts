@@ -3,7 +3,6 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { ListToolsRequestSchema, CallToolRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 import { CreateRepositorySchema, createRepositoryTool } from '../tools/repos.js'
-import { createRepositoryHandler } from '../handlers/create-repository.js';
 
 class MCPServerWrapper {
   private tools: any[] = [];
@@ -48,7 +47,7 @@ server.registerTool(
     description: createRepositoryTool.description,
     inputSchema: createRepositoryTool.schema
   },
-  createRepositoryHandler
+  () => { }
 )
 
 server.start().catch(console.error);

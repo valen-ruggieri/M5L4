@@ -53,16 +53,5 @@ export class GitHubClient {
     }
   }
 
-  async createRepo(name: string, options?: { description?: string; private?: boolean }): Promise<any> {
-    try {
-      const { data } = await this.octokit.rest.repos.createForAuthenticatedUser({
-        name,
-        ...(options?.description ? { description: options.description } : {}),
-        private: options?.private ?? false
-      });
-      return data;
-    } catch (error) {
-      handleError(error);
-    }
-  }
+
 }
