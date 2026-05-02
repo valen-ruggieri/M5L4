@@ -54,11 +54,11 @@ interface RepoDTO {
 **Ahora el código:**
 *Crear `src/handlers/create-repository.ts`.*
 ```typescript
-import { GithubClient } from '../github/client.js';
+import { GitHubClient } from '../github/client.js';
 import { CreateRepositorySchema } from '../tools/repos.js';
 import type { RepoDTO } from '../tools/repos.js';
 
-const client = new GithubClient();
+const client = new GitHubClient();
 
 export async function createRepositoryHandler(args: unknown) {
 
@@ -78,7 +78,11 @@ export async function createRepositoryHandler(args: unknown) {
       }]
     };
   }
+```
+*Señalar safeParse.*
+> "Si la validación falla, devolvemos el error inmediatamente — sin llamar a GitHub. El mensaje viene del schema Zod y le dice al agente exactamente qué campo está mal."
 
+```typescript
   // Extraer datos validados
   const { name, description, private: isPrivate } = result.data;
 
