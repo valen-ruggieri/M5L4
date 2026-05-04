@@ -54,24 +54,28 @@ export async function createRepositoryHandler(args: unknown) {
 
         const status = error?.status ?? 500;
 
-        const errorMap: Record<number, { code: string; message: string }> = {
+        const errorMap: Record<number, { code: string; message: string; suggestion?: string }> = {
             401: {
                 code: "UNAUTHORIZED",
-                message: "Token invalido o ausente"
+                message: "Token invalido o ausente",
+                suggestion: "Por favor, verifica que tu token de GitHub (GITHUB_TOKEN) esté bien configurado en el archivo .env"
             },
             403: {
-                code: "FORBBIDEN",
-                message: "Sin permisos o rate limit alcanzado"
+                code: "FORBIDDEN",
+                message: "Sin permisos o rate limit alcanzado",
+                suggestion: "Asegúrate de que tu token tenga los permisos de 'repo'. Si es un error de rate limit, intenta más tarde."
             },
             422: {
                 code: "VALIDATION_ERROR",
-                message: "Nombre invalido o repositorio ya existe"
+                message: "Nombre invalido o repositorio ya existe",
+                suggestion: "El repositorio probablemente ya existe en tu cuenta. Intenta crear el repositorio con un nombre diferente o utiliza la tool get_repository para consultarlo antes."
             }
         }
 
         const maped = errorMap[status] ?? {
             code: "UNKNOWN_ERROR",
-            message: `error inesperado (${status})`
+            message: `error inesperado (${status})`,
+            suggestion: "Ocurrió un error inesperado. Revisa los logs de la consola para más detalles."
         }
 
         return {
